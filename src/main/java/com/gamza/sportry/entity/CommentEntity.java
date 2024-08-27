@@ -26,6 +26,10 @@ public class CommentEntity {
     private PostEntity post;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private CommentEntity parent;
 
@@ -34,8 +38,5 @@ public class CommentEntity {
 
     @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private int loveCount;
 
 }
