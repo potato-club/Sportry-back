@@ -29,6 +29,9 @@ public class PostEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<LikeEntity> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<TagEntity> tags = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
