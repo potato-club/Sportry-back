@@ -1,11 +1,15 @@
 package com.gamza.sportry.entity;
 
+import com.gamza.sportry.core.entity.BaseEntity;
+import com.gamza.sportry.entity.custom.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long id;
+public class UserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PostEntity> posts = new ArrayList<>();
@@ -37,7 +36,13 @@ public class UserEntity {
     private List<ClassEntity> classes = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String userId;
+
+    @Column(nullable = false, unique = true)
+    private String nickName;
+
+    @Column(nullable = false)
+    private String refreshToken;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -45,7 +50,14 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+    private UserRole userRole;
+
     private String gender;
-    private int birth;
+    private LocalDate birth;
+
+    public void updateRefreshToken(String RT) {
+        this.refreshToken = RT;
+    }
+
 
 }
