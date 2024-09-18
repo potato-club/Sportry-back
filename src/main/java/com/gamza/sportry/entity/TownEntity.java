@@ -11,16 +11,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassEntity { //회원클래스
+public class TownEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "class_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @Column(nullable = false)
+    private String name; // 읍면동 이름
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private CityEntity city; // 해당 읍면동이 속한 시군구
 }

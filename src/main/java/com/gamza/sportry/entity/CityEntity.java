@@ -1,11 +1,11 @@
 package com.gamza.sportry.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,15 +14,21 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagEntity {
+public class CityEntity {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
     private Long id;
 
-    @ManyToMany(mappedBy = "tags")
-    private List<PostEntity> posts = new ArrayList<>(); // 태그가 연결된 게시글들
+    @Column(nullable = false)
+    private String name; // 시군구 이름
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "region_id", nullable = false)
+    private RegionEntity region; // 해당 시군구가 속한 시도
+
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    private List<TownEntity> towns; // 읍면동 리스트
+
 }

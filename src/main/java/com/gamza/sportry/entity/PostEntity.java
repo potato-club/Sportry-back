@@ -1,5 +1,6 @@
 package com.gamza.sportry.entity;
 
+import com.gamza.sportry.core.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,29 +15,25 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long id;
+public class PostEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<CommentEntity> comments = new ArrayList<>();
+    private List<CommentEntity> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<LikeEntity> likes = new ArrayList<>();
+    private List<LikeEntity> likes;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<TagEntity> tags = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
-    private TagEntity tag;
+    @ManyToMany
+    @JoinTable(
+            name = "post_tag", // 중간 테이블 이름
+            joinColumns = @JoinColumn(name = "post_id"), // Post와 연결된 컬럼
+            inverseJoinColumns = @JoinColumn(name = "tag_id") // Tag와 연결된 컬럼
+    )
+    private List<TagEntity> tags = new ArrayList<>(); // 게시글에 연결된 태그들
 
     @Column(nullable = false)
     private String title;
@@ -51,6 +48,6 @@ public class PostEntity {
     private int viewCount;
 
     @Column(nullable = false)
-    private int loveCount;
+    private int likeCount;
 
 }
