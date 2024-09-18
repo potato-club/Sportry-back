@@ -1,6 +1,7 @@
 package com.gamza.sportry.entity;
 
 import com.gamza.sportry.core.entity.BaseEntity;
+import com.gamza.sportry.dto.post.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,5 +50,13 @@ public class PostEntity extends BaseEntity {
 
     @Column(nullable = false)
     private int likeCount;
+
+    @Column(nullable = false)
+    private int commentCount;
+
+    public void update(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+    }
 
 }
