@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CareerEntity {
+public class CareerEntity { //운동경력
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -22,6 +22,6 @@ public class CareerEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    private String sport;
+    private String sportName;
     private String term;
 }

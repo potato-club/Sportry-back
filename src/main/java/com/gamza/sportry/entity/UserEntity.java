@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,10 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ClassEntity> classes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "town_id")
+    private TownEntity town; // 사용자가 선택한 읍면동
 
     @Column(nullable = false, unique = true)
     private String userId;
