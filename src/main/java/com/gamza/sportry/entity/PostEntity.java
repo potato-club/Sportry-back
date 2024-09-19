@@ -59,4 +59,12 @@ public class PostEntity extends BaseEntity {
         this.content = postRequestDto.getContent();
     }
 
+    public void upLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void downLikeCount() {
+        this.likeCount -= 1;
+    }
+
 }
