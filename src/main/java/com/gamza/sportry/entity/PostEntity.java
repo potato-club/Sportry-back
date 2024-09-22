@@ -28,13 +28,8 @@ public class PostEntity extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<LikeEntity> likes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "post_tag", // 중간 테이블 이름
-            joinColumns = @JoinColumn(name = "post_id"), // Post와 연결된 컬럼
-            inverseJoinColumns = @JoinColumn(name = "tag_id") // Tag와 연결된 컬럼
-    )
-    private List<TagEntity> tags = new ArrayList<>(); // 게시글에 연결된 태그들
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostTagEntity> postTags;
 
     @Column(nullable = false)
     private String title;

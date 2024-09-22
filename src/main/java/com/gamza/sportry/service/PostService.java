@@ -24,6 +24,7 @@ public class PostService {
 
     private final PostRepo postRepo;
     private final UserService userService;
+    private final TagService tagService;
 
     public void createPost(PostRequestDto postRequestDto, HttpServletRequest request)
     {
@@ -42,6 +43,9 @@ public class PostService {
                 .build();
 
         postRepo.save(post);
+
+        List<String> tags = postRequestDto.getTag();
+        tags.forEach(tag -> tagService.addTag(post, tag));
     }
 
     public List<PostListResponseDto> findPostList()
@@ -83,6 +87,9 @@ public class PostService {
             throw new UnAuthorizedException("게시글 수정 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
 
         post.update(postRequestDto);
+        tagService.delTag(post);
+        List<String> tags = postRequestDto.getTag();
+        tags.forEach(tag -> tagService.addTag(post, tag));
     }
 
     public void deletePost(Long id, HttpServletRequest request) {
