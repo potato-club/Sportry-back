@@ -36,7 +36,7 @@ public class PostService {
                 .user(user)
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
-                .state(true)
+                .postState(postRequestDto.getPostState())
                 .viewCount(0)
                 .likeCount(0)
                 .commentCount(0)
@@ -65,13 +65,17 @@ public class PostService {
         if (post == null)
             throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
 
+        post.upViewCount();
+
         return PostResponseDto.builder()
+                .createdDate(post.getCreatedDate())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .state(true)
+                .postState(post.getPostState().getTitle())
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .commentCount(post.getCommentCount())
+                .tag(tagService.findPostTag(post))
                 .build();
     }
 
