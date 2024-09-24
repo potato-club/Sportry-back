@@ -34,9 +34,13 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ClassEntity> classes = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "town_id")
-    private TownEntity town; // 사용자가 선택한 읍면동
+    @ManyToMany
+    @JoinTable(
+            name = "user_town", // 중간 테이블 이름
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "town_id")
+    )
+    private List<TownEntity> towns = new ArrayList<>();
 
     @Column(nullable = false, unique = true)
     private String userId;
@@ -61,6 +65,5 @@ public class UserEntity extends BaseEntity {
     public void updateRefreshToken(String RT) {
         this.refreshToken = RT;
     }
-
 
 }
