@@ -1,6 +1,7 @@
 package com.gamza.sportry.entity;
 
 import com.gamza.sportry.core.entity.BaseEntity;
+import com.gamza.sportry.dto.post.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +28,8 @@ public class PostEntity extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<LikeEntity> likes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "post_tag", // 중간 테이블 이름
-            joinColumns = @JoinColumn(name = "post_id"), // Post와 연결된 컬럼
-            inverseJoinColumns = @JoinColumn(name = "tag_id") // Tag와 연결된 컬럼
-    )
-    private List<TagEntity> tags = new ArrayList<>(); // 게시글에 연결된 태그들
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostTagEntity> postTags;
 
     @Column(nullable = false)
     private String title;
@@ -49,5 +45,21 @@ public class PostEntity extends BaseEntity {
 
     @Column(nullable = false)
     private int likeCount;
+
+    @Column(nullable = false)
+    private int commentCount;
+
+    public void update(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
+    }
+
+    public void upLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void downLikeCount() {
+        this.likeCount -= 1;
+    }
 
 }
