@@ -2,6 +2,7 @@ package com.gamza.sportry.service.region;
 
 import com.gamza.sportry.core.error.ErrorCode;
 import com.gamza.sportry.core.error.exception.BadRequestException;
+import com.gamza.sportry.core.error.exception.InvalidTokenException;
 import com.gamza.sportry.core.security.JwtTokenProvider;
 import com.gamza.sportry.dto.region.CityResponseDto;
 import com.gamza.sportry.dto.region.RegionResponseDto;
@@ -43,14 +44,16 @@ public class RegionService {
 
     // 시군구 목록 가져오기
     public List<CityResponseDto> getCitiesByRegion(Long regionId) {
-        RegionEntity region = regionRepository.findById(regionId).orElseThrow(() -> new IllegalArgumentException("해당 시도가 없습니다."));
+        RegionEntity region = regionRepository.findById(regionId)
+                .orElseThrow(() -> new BadRequestException("해당 시도가 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
         List<CityEntity> cities = region.getCities();
         return cities.stream().map(city -> new CityResponseDto(city.getId(), city.getName())).collect(Collectors.toList());
     }
 
     // 읍면동 목록 가져오기
     public List<TownResponseDto> getTownsByCity(Long cityId) {
-        CityEntity city = cityRepository.findById(cityId).orElseThrow(() -> new IllegalArgumentException("해당 시군구가 없습니다."));
+        CityEntity city = cityRepository.findById(cityId)
+                .orElseThrow(() -> new BadRequestException("해당 시군구가 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
         List<TownEntity> towns = city.getTowns();
         return towns.stream().map(town -> new TownResponseDto(town.getId(), town.getName())).collect(Collectors.toList());
     }
@@ -61,30 +64,37 @@ public class RegionService {
         String token = jwtTokenProvider.resolveAccessToken(request);
 
         if (token == null || !jwtTokenProvider.validateToken(token)) {
-            throw new BadRequestException("유효하지 않은 토큰입니다.", ErrorCode.BAD_REQUEST_EXCEPTION);
-        }
-        if (selectRegionDto.getTownIds() == null || selectRegionDto.getTownIds().isEmpty()) {
-            throw new BadRequestException("선택된 지역이 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION);
+            throw new InvalidTokenException("유효하지 않은 토큰입니다.", ErrorCode.BAD_REQUEST_EXCEPTION);
         }
 
         String userId = jwtTokenProvider.getUserId(token);
 
         UserEntity user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BadRequestException("사용자를 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
 
-        for (Long townId : selectRegionDto.getTownIds()) {
-            TownEntity town = townRepository.findById(townId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 읍면동을 찾을 수 없습니다."));
+        // 사용자가 선택한 여러 townId에 대해 처리
+        List<Long> selectedTownIds = selectRegionDto.getTownIds();
 
-            // 중복 선택 방지 로직 추가
-            if (user.getTown() != null && user.getTown().getId().equals(town.getId())) {
-                continue; // 이미 선택한 지역이면 넘어감
+        // 기존에 사용자가 선택한 모든 지역 정보 삭제
+        if (user.getTowns() != null) {
+            for (TownEntity currentTown : user.getTowns()) {
+                currentTown.getUsers().remove(user);
             }
-
-            user.setTown(town);
+            user.getTowns().clear();
         }
 
-        userRepository.save(user);
+        // 새로 선택한 townId 리스트를 처리하여 사용자와 연관 관계 설정
+        for (Long townId : selectedTownIds) {
+            TownEntity town = townRepository.findById(townId)
+                    .orElseThrow(() -> new BadRequestException("해당 읍면동을 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
+
+            // 이미 추가된 관계를 중복으로 처리하지 않도록 체크
+            if (!town.getUsers().contains(user)) {
+                town.getUsers().add(user);
+            }
+
+            user.getTowns().add(town);
+        }
     }
 
 }

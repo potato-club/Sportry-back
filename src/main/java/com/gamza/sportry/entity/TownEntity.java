@@ -22,8 +22,8 @@ public class TownEntity {
     @Column(nullable = false)
     private String name; // 읍면동 이름
 
-    @OneToMany(mappedBy = "town", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserEntity> users;
+    @ManyToMany(mappedBy = "towns")
+    private List<UserEntity> users; // 다대다 관계로 변경
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
