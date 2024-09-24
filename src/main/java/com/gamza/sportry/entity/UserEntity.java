@@ -61,6 +61,23 @@ public class UserEntity extends BaseEntity {
     public void updateRefreshToken(String RT) {
         this.refreshToken = RT;
     }
+    public void setTown(TownEntity town) {
+        // 중복 설정 방지
+        if (this.town != null && this.town.getId().equals(town.getId())) {
+            return; // 동일한 지역인 경우 설정하지 않고 종료
+        }
 
+        // 기존에 설정된 지역이 있을 경우 관계 해제
+        if (this.town != null) {
+            this.town.getUsers().remove(this);
+        }
+
+        this.town = town;
+
+        // 새로운 town의 사용자 목록에 추가
+        if (town != null && !town.getUsers().contains(this)) {
+            town.getUsers().add(this);
+        }
+    }
 
 }
