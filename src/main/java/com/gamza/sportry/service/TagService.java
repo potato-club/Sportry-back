@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -42,6 +45,13 @@ public class TagService {
 
     public void delTag(PostEntity post) {
         postTagRepo.deleteAllByPost(post);
+    }
+
+    public List<String> findPostTag(PostEntity post) {
+        List<PostTagEntity> postTags = post.getPostTags();
+        List<TagEntity> tags = postTags.stream().map(postTag -> postTag.getTag()).collect(Collectors.toList());
+        List<String> tagNames = tags.stream().map(tag -> tag.getName()).collect(Collectors.toList());
+        return tagNames;
     }
 
 }

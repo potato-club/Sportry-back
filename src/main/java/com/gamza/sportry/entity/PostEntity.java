@@ -2,6 +2,7 @@ package com.gamza.sportry.entity;
 
 import com.gamza.sportry.core.entity.BaseEntity;
 import com.gamza.sportry.dto.post.PostRequestDto;
+import com.gamza.sportry.entity.custom.PostState;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,8 +38,9 @@ public class PostEntity extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean state;
+    private PostState postState;
 
     @Column(nullable = false)
     private int viewCount;
@@ -52,6 +54,7 @@ public class PostEntity extends BaseEntity {
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+        this.postState = postRequestDto.getPostState();
     }
 
     public void upLikeCount() {
@@ -60,6 +63,10 @@ public class PostEntity extends BaseEntity {
 
     public void downLikeCount() {
         this.likeCount -= 1;
+    }
+
+    public void upViewCount() {
+        this.viewCount += 1;
     }
 
 }
