@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -19,6 +21,9 @@ public class TownEntity {
 
     @Column(nullable = false)
     private String name; // 읍면동 이름
+
+    @OneToMany(mappedBy = "town", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserEntity> users;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
