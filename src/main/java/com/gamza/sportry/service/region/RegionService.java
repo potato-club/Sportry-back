@@ -15,14 +15,12 @@ import com.gamza.sportry.repo.region.CityRepo;
 import com.gamza.sportry.repo.region.RegionRepo;
 import com.gamza.sportry.repo.UserRepo;
 import com.gamza.sportry.repo.region.TownRepo;
-import jakarta.persistence.Temporal;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service

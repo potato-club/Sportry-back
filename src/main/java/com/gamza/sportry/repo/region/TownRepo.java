@@ -1,7 +1,6 @@
 package com.gamza.sportry.repo.region;
 
 import com.gamza.sportry.entity.TownEntity;
-import com.gamza.sportry.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
