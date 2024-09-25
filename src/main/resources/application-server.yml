@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 5
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(9LgyMlevuEnYkAlTLuIqbKllaadJ9r6YbrZpeRcIjxHL34wZHKmJ9+VuUAoZtT8Ep5yEzs/DJSecg5mBCXM1VVAJhl3qX3/LAgvLP+BYI24U3z5RSP3hvneAWJmbeRjA)
+    username: ENC(6hOC7akOUMzKRUY/hWwfsQ==)
+    password: ENC(7zPwOLBSMsR/nneSOyjz5F2NLyiww2f+)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        show_sql: true
+        format_sql: true
+    open-in-view: false
+
+jwt:
+  secretKey: ENC(OgqbfhnXv/Pg6xyLrZE594mIldYpBxSNToZdj2qZVYT8SLfDwErFhi9PUWAxUDeL)
+  accessTokenExpiration: 3000000000
+  refreshTokenExpiration: 6000000000
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor

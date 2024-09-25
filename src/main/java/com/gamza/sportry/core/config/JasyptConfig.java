@@ -18,10 +18,13 @@ public class JasyptConfig {
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         config.setPassword(PASSWORD);
         config.setPoolSize("1");
-        config.setAlgorithm("PBEWithMD5AndDES");
-        config.setStringOutputType("base64");
+
+        config.setAlgorithm("PBEWithHMACSHA512AndAES_256");
+
         config.setKeyObtentionIterations("1000");
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator");
+        config.setStringOutputType("base64");
         encryptor.setConfig(config);
         return encryptor;
     }
