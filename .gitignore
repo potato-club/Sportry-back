@@ -20,12 +20,13 @@ bin/
 ### IntelliJ IDEA ###
 .idea
 *.iws
-*.yml
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+application.yml
+**/JasyptConfigTest.java
 
 ### NetBeans ###
 /nbproject/private/
