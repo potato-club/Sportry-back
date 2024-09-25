@@ -10,9 +10,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(9LgyMlevuEnYkAlTLuIqbKllaadJ9r6YbrZpeRcIjxHL34wZHKmJ9+VuUAoZtT8Ep5yEzs/DJSecg5mBCXM1VVAJhl3qX3/LAgvLP+BYI24U3z5RSP3hvneAWJmbeRjA)
-    username: ENC(6hOC7akOUMzKRUY/hWwfsQ==)
-    password: ENC(7zPwOLBSMsR/nneSOyjz5F2NLyiww2f+)
+    url: ENC(nQ/np/LhAV5eQBRlIySAiHNMj/Lk0UqPkfADVjVWoiGXj642uG6JX69HagH0zCMdi52igsPgBWm+iFx4fxG0OFhdEGKZ7XWntGKVTAgxmk7PpAgJaaZxny36k41QAdgA)
+    username: ENC(CjXf8pnvBv9u37l9vdI5mQ==)
+    password: ENC(zhuPcwG7/0bawdn3zpX0YGve7IOXKBkW)
 
   jpa:
     hibernate:
@@ -25,7 +25,7 @@ spring:
     open-in-view: false
 
 jwt:
-  secretKey: ENC(OgqbfhnXv/Pg6xyLrZE594mIldYpBxSNToZdj2qZVYT8SLfDwErFhi9PUWAxUDeL)
+  secretKey: ENC(idnl5OMKiWISdkOfB5PbUJcKR24Ngz1R9MTboPKe1JaMeIPA7H4IU6WmDsRU2kWP)
   accessTokenExpiration: 3000000000
   refreshTokenExpiration: 6000000000
 
