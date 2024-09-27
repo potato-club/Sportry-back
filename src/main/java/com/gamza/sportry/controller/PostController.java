@@ -1,7 +1,8 @@
 package com.gamza.sportry.controller;
 
+import com.gamza.sportry.dto.post.CrewPostsResponseDto;
 import com.gamza.sportry.dto.post.PostRequestDto;
-import com.gamza.sportry.dto.post.PostListResponseDto;
+import com.gamza.sportry.dto.post.MainPostsResponseDto;
 import com.gamza.sportry.dto.post.PostResponseDto;
 import com.gamza.sportry.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +30,16 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 목록 조회 (메인페이지)")
-    @GetMapping()
-    public ResponseEntity<List<PostListResponseDto>> findPostList() {
-        List<PostListResponseDto> posts = postService.findPostList();
+    @GetMapping("/main")
+    public ResponseEntity<List<MainPostsResponseDto>> findMainPosts() {
+        List<MainPostsResponseDto> posts = postService.findMainPosts();
+        return ResponseEntity.ok(posts);
+    }
+
+    @Operation(summary = "게시글 목록 조회 (크루페이지)")
+    @GetMapping("/crew")
+    public ResponseEntity<List<CrewPostsResponseDto>> findCrewPosts() {
+        List<CrewPostsResponseDto> posts = postService.findCrewPosts();
         return ResponseEntity.ok(posts);
     }
 

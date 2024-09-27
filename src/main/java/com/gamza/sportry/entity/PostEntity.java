@@ -23,6 +23,10 @@ public class PostEntity extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
+    @OneToOne
+    @JoinColumn(name = "sport_id")
+    private SportEntity sport;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
 

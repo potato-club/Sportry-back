@@ -3,12 +3,14 @@ package com.gamza.sportry.service;
 import com.gamza.sportry.core.error.ErrorCode;
 import com.gamza.sportry.core.error.exception.NotFoundException;
 import com.gamza.sportry.core.error.exception.UnAuthorizedException;
+import com.gamza.sportry.dto.post.CrewPostsResponseDto;
 import com.gamza.sportry.dto.post.PostRequestDto;
-import com.gamza.sportry.dto.post.PostListResponseDto;
+import com.gamza.sportry.dto.post.MainPostsResponseDto;
 import com.gamza.sportry.dto.post.PostResponseDto;
 import com.gamza.sportry.entity.PostEntity;
 import com.gamza.sportry.entity.UserEntity;
 import com.gamza.sportry.repo.PostRepo;
+import com.gamza.sportry.repo.sport.SportRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepo postRepo;
+    private final SportRepo sportRepo;
     private final UserService userService;
     private final TagService tagService;
 
@@ -37,6 +40,7 @@ public class PostService {
                 .title(postRequestDto.getTitle())
                 .content(postRequestDto.getContent())
                 .postState(postRequestDto.getPostState())
+                .sport(sportRepo.findByName(postRequestDto.getSport()))
                 .viewCount(0)
                 .likeCount(0)
                 .commentCount(0)
@@ -48,14 +52,33 @@ public class PostService {
         tags.forEach(tag -> tagService.addTag(post, tag));
     }
 
-    public List<PostListResponseDto> findPostList()
+    public List<MainPostsResponseDto> findMainPosts()
     {
         List<PostEntity> posts = postRepo.findAll();
         return posts.stream()
-                .map(post -> PostListResponseDto.builder()
+                .map(post -> MainPostsResponseDto.builder()
                         .id(post.getId())
                         .title(post.getTitle())
+                        .sport(post.getSport().getName())
                         .likeCount(post.getLikeCount())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<CrewPostsResponseDto> findCrewPosts()
+    {
+        List<PostEntity> posts = postRepo.findAll();
+        return posts.stream()
+                .map(post -> CrewPostsResponseDto.builder()
+                        .id(post.getId())
+                        .createdDate(post.getCreatedDate())
+                        .title(post.getTitle())
+                        .postState(post.getPostState().getTitle())
+                        .sport(post.getSport().getName())
+                        .viewCount(post.getViewCount())
+                        .likeCount(post.getLikeCount())
+                        .commentCount(post.getCommentCount())
+                        .tag(tagService.findPostTag(post))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -73,6 +96,7 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .postState(post.getPostState().getTitle())
+                .sport(post.getSport().getName())
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .commentCount(post.getCommentCount())

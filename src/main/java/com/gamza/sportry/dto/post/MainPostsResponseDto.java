@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class PostListResponseDto {
+public class MainPostsResponseDto {
     private Long id;
     private String title;
+    private String sport;
     private int likeCount;
 }
