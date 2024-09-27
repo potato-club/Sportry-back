@@ -53,6 +53,7 @@ public class PostService {
         List<PostEntity> posts = postRepo.findAll();
         return posts.stream()
                 .map(post -> PostListResponseDto.builder()
+                        .id(post.getId())
                         .title(post.getTitle())
                         .likeCount(post.getLikeCount())
                         .build())

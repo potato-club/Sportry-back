@@ -8,6 +8,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class PostListResponseDto {
+    private Long id;
     private String title;
     private int likeCount;
 }
