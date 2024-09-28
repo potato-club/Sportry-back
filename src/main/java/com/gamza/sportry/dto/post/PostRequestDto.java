@@ -10,5 +10,6 @@ public class PostRequestDto {
     private String title;
     private String content;
     private PostState postState;
+    private String sport;
     private List<String> tag;
 }
