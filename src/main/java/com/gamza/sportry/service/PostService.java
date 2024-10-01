@@ -8,6 +8,7 @@ import com.gamza.sportry.dto.post.PostRequestDto;
 import com.gamza.sportry.dto.post.MainPostsResponseDto;
 import com.gamza.sportry.dto.post.PostResponseDto;
 import com.gamza.sportry.entity.PostEntity;
+import com.gamza.sportry.entity.SportEntity;
 import com.gamza.sportry.entity.UserEntity;
 import com.gamza.sportry.repo.PostRepo;
 import com.gamza.sportry.repo.sport.SportRepo;
@@ -29,8 +30,7 @@ public class PostService {
     private final UserService userService;
     private final TagService tagService;
 
-    public void createPost(PostRequestDto postRequestDto, HttpServletRequest request)
-    {
+    public void createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
         UserEntity user = userService.findUserByToken(request);
         if (user == null)
             throw new NotFoundException("로그인 후 게시글 작성이 가능합니다", ErrorCode.NOT_FOUND_EXCEPTION);
@@ -52,8 +52,7 @@ public class PostService {
         tags.forEach(tag -> tagService.addTag(post, tag));
     }
 
-    public List<MainPostsResponseDto> findMainPosts()
-    {
+    public List<MainPostsResponseDto> findMainPosts() {
         List<PostEntity> posts = postRepo.findAll();
         return posts.stream()
                 .map(post -> MainPostsResponseDto.builder()
@@ -65,8 +64,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<CrewPostsResponseDto> findCrewPosts()
-    {
+    public List<CrewPostsResponseDto> findCrewPosts() {
         List<PostEntity> posts = postRepo.findAll();
         return posts.stream()
                 .map(post -> CrewPostsResponseDto.builder()
@@ -83,8 +81,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostResponseDto findPost(Long id)
-    {
+    public PostResponseDto findPost(Long id) {
         PostEntity post = postRepo.findById(id).orElse(null);
         if (post == null)
             throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
@@ -115,7 +112,8 @@ public class PostService {
         if (post.getUser() != user)
             throw new UnAuthorizedException("게시글 수정 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
 
-        post.update(postRequestDto);
+        SportEntity sport = sportRepo.findByName(postRequestDto.getSport());
+        post.update(postRequestDto, sport);
         tagService.delTag(post);
         List<String> tags = postRequestDto.getTag();
         tags.forEach(tag -> tagService.addTag(post, tag));

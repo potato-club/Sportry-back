@@ -55,10 +55,11 @@ public class PostEntity extends BaseEntity {
     @Column(nullable = false)
     private int commentCount;
 
-    public void update(PostRequestDto postRequestDto) {
+    public void update(PostRequestDto postRequestDto, SportEntity sport) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.postState = postRequestDto.getPostState();
+        this.sport = sport;
     }
 
     public void upLikeCount() {
@@ -72,5 +73,14 @@ public class PostEntity extends BaseEntity {
     public void upViewCount() {
         this.viewCount += 1;
     }
+
+    public void upCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public void downCommentCount() {
+        this.commentCount -= 1;
+    }
+
 
 }
