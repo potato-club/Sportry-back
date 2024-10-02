@@ -9,4 +9,4 @@ RUN ./gradlew bootJar
 ENV SPRING_PROFILES_ACTIVE=server
 ENV JAVA_OPTS="-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"
 
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/build/libs/sportry-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /build/libs/Sportry-0.0.1-SNAPSHOT.jar"]
