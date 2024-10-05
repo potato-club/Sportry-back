@@ -34,6 +34,9 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ClassEntity> classes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CommentLikeEntity> commentLikes = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
             name = "user_town", // 중간 테이블 이름
