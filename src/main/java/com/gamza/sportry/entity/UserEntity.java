@@ -26,7 +26,7 @@ public class UserEntity extends BaseEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<LikeEntity> likes = new ArrayList<>();
+    private List<PostLikeEntity> postLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CareerEntity> careers = new ArrayList<>();

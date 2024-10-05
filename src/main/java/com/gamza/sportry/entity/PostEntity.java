@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,7 +30,7 @@ public class PostEntity extends BaseEntity {
     private List<CommentEntity> comments;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<LikeEntity> likes;
+    private List<PostLikeEntity> postLikes;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostTagEntity> postTags;
@@ -62,11 +61,11 @@ public class PostEntity extends BaseEntity {
         this.sport = sport;
     }
 
-    public void upLikeCount() {
+    public void upPostLikeCount() {
         this.likeCount += 1;
     }
 
-    public void downLikeCount() {
+    public void downPostLikeCount() {
         this.likeCount -= 1;
     }
 
