@@ -33,6 +33,9 @@ public class CommentEntity extends BaseEntity  {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<CommentEntity> children = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLikeEntity> commentLikes;
+
     @Column(nullable = false)
     private String content;
 
@@ -45,5 +48,14 @@ public class CommentEntity extends BaseEntity  {
     public void update(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
     }
+
+    public void upCommentLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void downCommentLikeCount() {
+        this.likeCount -= 1;
+    }
+
 
 }

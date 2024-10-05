@@ -25,4 +25,10 @@ public class LikeController {
         return ResponseEntity.ok(likeService.likePost(id, request));
     }
 
+    @Operation(summary = "댓글 좋아요")
+    @PostMapping("comment/{id}")
+    public ResponseEntity<String> likeComment(@PathVariable Long id, HttpServletRequest request) {
+        return ResponseEntity.ok(likeService.likeComment(id, request));
+    }
+
 }
