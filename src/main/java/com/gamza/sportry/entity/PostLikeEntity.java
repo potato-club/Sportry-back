@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LikeEntity {
+public class PostLikeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "post_like_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
