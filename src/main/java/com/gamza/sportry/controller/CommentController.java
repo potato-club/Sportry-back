@@ -31,9 +31,9 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 조회")
-    @GetMapping()
-    public ResponseEntity<List<CommentResponseDto>> findComments() {
-        List<CommentResponseDto> comments = commentService.findComments();
+    @GetMapping("/{post_id}")
+    public ResponseEntity<List<CommentResponseDto>> findComments(@PathVariable Long post_id) {
+        List<CommentResponseDto> comments = commentService.findComments(post_id);
         return ResponseEntity.ok(comments);
     }
 
