@@ -30,7 +30,7 @@ public class CommentService {
     public void createComment(Long post_id, CommentRequestDto commentRequestDto, HttpServletRequest request) {
         UserEntity user = userService.findUserByToken(request);
         if (user == null)
-            throw new NotFoundException("로그인 후 게시글 작성이 가능합니다", ErrorCode.NOT_FOUND_EXCEPTION);
+            throw new NotFoundException("로그인 후 댓글 작성이 가능합니다", ErrorCode.NOT_FOUND_EXCEPTION);
 
         PostEntity post = postRepo.findById(post_id).orElse(null);
         if (post == null)
@@ -48,8 +48,10 @@ public class CommentService {
         commentRepo.save(comment);
     }
 
-    public List<CommentResponseDto> findComments() {
-        List<CommentEntity> comments = commentRepo.findAll();
+    public List<CommentResponseDto> findComments(Long post_id) {
+        PostEntity post = postRepo.findById(post_id).orElse(null);
+
+        List<CommentEntity> comments = post.getComments();
         return comments.stream()
                 .map(comment -> CommentResponseDto.builder()
                         .id(comment.getId())

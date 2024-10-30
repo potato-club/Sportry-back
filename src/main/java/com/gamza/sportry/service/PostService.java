@@ -81,7 +81,11 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostResponseDto findPost(Long id) {
+    public PostResponseDto findPost(Long id, HttpServletRequest request) {
+        UserEntity user = userService.findUserByToken(request);
+        if (user == null)
+            throw new UnAuthorizedException("게시글 조회 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+
         PostEntity post = postRepo.findById(id).orElse(null);
         if (post == null)
             throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);

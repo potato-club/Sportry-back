@@ -45,8 +45,8 @@ public class PostController {
 
     @Operation(summary = "게시글 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> findPost(@PathVariable Long id) {
-        PostResponseDto post = postService.findPost(id);
+    public ResponseEntity<PostResponseDto> findPost(@PathVariable Long id, HttpServletRequest request) {
+        PostResponseDto post = postService.findPost(id, request);
         return ResponseEntity.ok(post);
     }
 
