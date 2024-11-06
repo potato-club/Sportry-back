@@ -1,4 +1,4 @@
-package com.gamza.sportry.dto.post;
+package com.gamza.sportry.dto.main.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
