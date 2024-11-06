@@ -5,7 +5,7 @@ import com.gamza.sportry.core.error.exception.NotFoundException;
 import com.gamza.sportry.core.error.exception.UnAuthorizedException;
 import com.gamza.sportry.dto.post.CrewPostsResponseDto;
 import com.gamza.sportry.dto.post.PostRequestDto;
-import com.gamza.sportry.dto.post.MainPostsResponseDto;
+import com.gamza.sportry.dto.main.response.MainPostsResponseDto;
 import com.gamza.sportry.dto.post.PostResponseDto;
 import com.gamza.sportry.entity.PostEntity;
 import com.gamza.sportry.entity.SportEntity;
