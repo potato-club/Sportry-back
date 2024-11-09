@@ -41,7 +41,34 @@ public class CommentService {
                 .post(post)
                 .content(commentRequestDto.getContent())
                 .likeCount(0)
-                .commentCount(0)
+                .build();
+
+        post.upCommentCount();
+        commentRepo.save(comment);
+    }
+
+    public void createReply(Long post_id, Long comment_id,
+                            CommentRequestDto commentRequestDto, HttpServletRequest request) {
+        UserEntity user = userService.findUserByToken(request);
+        if (user == null)
+            throw new NotFoundException("로그인 후 댓글 작성이 가능합니다", ErrorCode.NOT_FOUND_EXCEPTION);
+
+        PostEntity post = postRepo.findById(post_id).orElse(null);
+        if (post == null)
+            throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+
+        CommentEntity parent = commentRepo.findById(comment_id).orElse(null);
+        if (parent == null)
+            throw new NotFoundException("찾을 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+        if (parent.getParent() != null)
+            throw new NotFoundException("작성할 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+
+        CommentEntity comment = CommentEntity.builder()
+                .user(user)
+                .post(post)
+                .parent(parent)
+                .content(commentRequestDto.getContent())
+                .likeCount(0)
                 .build();
 
         post.upCommentCount();
@@ -50,15 +77,35 @@ public class CommentService {
 
     public List<CommentResponseDto> findComments(Long post_id) {
         PostEntity post = postRepo.findById(post_id).orElse(null);
+        if (post == null)
+            throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
 
         List<CommentEntity> comments = post.getComments();
         return comments.stream()
+                .filter(comment -> comment.getParent() == null)
                 .map(comment -> CommentResponseDto.builder()
                         .id(comment.getId())
                         .createdDate(comment.getCreatedDate())
                         .content(comment.getContent())
                         .likeCount(comment.getLikeCount())
-                        .commentCount(comment.getCommentCount())
+                        .children(findreplies(comment.getId()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<CommentResponseDto> findreplies(Long comment_id) {
+        CommentEntity parent = commentRepo.findById(comment_id).orElse(null);
+        if (parent == null)
+            throw new NotFoundException("찾을 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+
+        List<CommentEntity> replies = parent.getChildren();
+        return replies.stream()
+                .map(reply -> CommentResponseDto.builder()
+                        .parent_id(reply.getParent().getId())
+                        .id(reply.getId())
+                        .createdDate(reply.getCreatedDate())
+                        .content(reply.getContent())
+                        .likeCount(reply.getLikeCount())
                         .build())
                 .collect(Collectors.toList());
     }

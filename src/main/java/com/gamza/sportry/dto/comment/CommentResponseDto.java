@@ -6,12 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class CommentResponseDto {
 
+    private Long parent_id;
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
@@ -19,7 +22,7 @@ public class CommentResponseDto {
 
     private String content;
     private int likeCount;
-    private int commentCount;
 
+    private List<CommentResponseDto> children = new ArrayList<>();
 
 }
