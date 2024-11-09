@@ -2,8 +2,6 @@ package com.gamza.sportry.controller;
 
 import com.gamza.sportry.dto.comment.CommentRequestDto;
 import com.gamza.sportry.dto.comment.CommentResponseDto;
-import com.gamza.sportry.dto.post.MainPostsResponseDto;
-import com.gamza.sportry.dto.post.PostRequestDto;
 import com.gamza.sportry.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
