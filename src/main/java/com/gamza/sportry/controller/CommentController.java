@@ -30,6 +30,15 @@ public class CommentController {
         return ResponseEntity.ok("댓글 작성 완료");
     }
 
+    @Operation(summary = "대댓글 작성")
+    @PostMapping("/{post_id}/{comment_id}")
+    public ResponseEntity<String> createComment(
+            @PathVariable Long post_id, @PathVariable Long comment_id,
+            @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
+        commentService.createReply(post_id, comment_id, commentRequestDto, request);
+        return ResponseEntity.ok("대댓글 작성 완료");
+    }
+
     @Operation(summary = "댓글 조회")
     @GetMapping("/{post_id}")
     public ResponseEntity<List<CommentResponseDto>> findComments(@PathVariable Long post_id) {

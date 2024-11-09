@@ -42,9 +42,6 @@ public class CommentEntity extends BaseEntity  {
     @Column(nullable = false)
     private int likeCount;
 
-    @Column(nullable = false)
-    private int commentCount;
-
     public void update(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
     }
