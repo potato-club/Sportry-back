@@ -45,4 +45,10 @@ public class MainController {
     public List<MainUrgentPostResponseDto> getUrgentPostList() {
         return mainService.getUrgentPostList();
     }
+
+    @Operation(summary = "검색 키워드 Top10")
+    @GetMapping("/search/top10")
+    public List<String> getTop10Tags() {
+        return searchService.getTop10Tags();
+    }
 }

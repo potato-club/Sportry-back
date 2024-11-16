@@ -25,4 +25,11 @@ public class TagEntity {
     private List<PostTagEntity> postTags;
 
     private String name;
+
+    @Column(nullable = false)
+    private int searchCount;
+
+    public void incrementSearchCount() {
+        this.searchCount++;
+    }
 }
