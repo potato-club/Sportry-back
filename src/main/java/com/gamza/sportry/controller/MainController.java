@@ -1,5 +1,6 @@
 package com.gamza.sportry.controller;
 
+import com.gamza.sportry.dto.main.response.MainUrgentPostResponseDto;
 import com.gamza.sportry.dto.main.response.SearchPostResponseDto;
 import com.gamza.sportry.dto.main.response.MainHotPostResponseDto;
 import com.gamza.sportry.service.main.MainService;
@@ -37,5 +38,11 @@ public class MainController {
     @GetMapping("/hot")
     public List<MainHotPostResponseDto> getHotPostList() {
         return mainService.getHotPostList();
+    }
+
+    @Operation(summary = "모집 임박글")
+    @GetMapping("/urgent")
+    public List<MainUrgentPostResponseDto> getUrgentPostList() {
+        return mainService.getUrgentPostList();
     }
 }
