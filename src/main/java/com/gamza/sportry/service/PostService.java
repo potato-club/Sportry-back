@@ -14,6 +14,7 @@ import com.gamza.sportry.repo.PostRepo;
 import com.gamza.sportry.repo.sport.SportRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,21 +65,33 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<CrewPostsResponseDto> findCrewPosts() {
-        List<PostEntity> posts = postRepo.findAll();
+    public List<CrewPostsResponseDto> findCrewPosts(Long lastPostId) {
+        PageRequest pageRequest = PageRequest.of(0, 6);
+        List<PostEntity> posts;
+
+        if (lastPostId == null) {
+            posts = postRepo.findAllByOrderByIdDesc(pageRequest);
+        } else {
+            posts = postRepo.findByIdLessThanOrderByIdDesc(lastPostId, pageRequest);
+        }
+
         return posts.stream()
-                .map(post -> CrewPostsResponseDto.builder()
-                        .id(post.getId())
-                        .createdDate(post.getCreatedDate())
-                        .title(post.getTitle())
-                        .postState(post.getPostState().getTitle())
-                        .sport(post.getSport().getName())
-                        .viewCount(post.getViewCount())
-                        .likeCount(post.getLikeCount())
-                        .commentCount(post.getCommentCount())
-                        .tag(tagService.findPostTag(post))
-                        .build())
+                .map(this::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    private CrewPostsResponseDto mapToDto(PostEntity post) {
+        return CrewPostsResponseDto.builder()
+                .id(post.getId())
+                .createdDate(post.getCreatedDate())
+                .title(post.getTitle())
+                .postState(post.getPostState().getTitle())
+                .sport(post.getSport().getName())
+                .viewCount(post.getViewCount())
+                .likeCount(post.getLikeCount())
+                .commentCount(post.getCommentCount())
+                .tag(tagService.findPostTag(post))
+                .build();
     }
 
     public PostResponseDto findPost(Long id, HttpServletRequest request) {

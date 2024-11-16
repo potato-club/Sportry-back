@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -18,8 +20,8 @@ public class SportEntity {
     @Column(name = "sport_id")
     private Long id;
 
-    @OneToOne(mappedBy = "sport")
-    private PostEntity post;
+    @OneToMany(mappedBy = "sport", cascade = CascadeType.ALL)
+    private List<PostEntity> posts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
