@@ -5,6 +5,7 @@ import com.gamza.sportry.entity.PostEntity;
 import com.gamza.sportry.entity.QPostEntity;
 import com.gamza.sportry.entity.QPostTagEntity;
 import com.gamza.sportry.entity.QTagEntity;
+import com.gamza.sportry.entity.TagEntity;
 import com.gamza.sportry.repo.PostRepo;
 import com.gamza.sportry.repo.PostTagRepo;
 import com.gamza.sportry.repo.TagRepo;
@@ -13,7 +14,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +33,16 @@ public class SearchService {
     QPostTagEntity qPostTagEntity = QPostTagEntity.postTagEntity;
     QTagEntity qTagEntity = QTagEntity.tagEntity;
 
-
     public Page<SearchPostResponseDto> searchPage(List<String> tags, Pageable pageable) {
         // 태그 조건 설정
         BooleanExpression tagCondition = null;
         if (tags != null && !tags.isEmpty()) {
             tagCondition = qPostEntity.postTags.any().tag.name.in(tags);
+
+            // 태그 검색 횟수 증가
+            tags.forEach(this::incrementTagSearchCount);
         }
+
         // 검색 쿼리 작성
         List<PostEntity> postEntities = jpaQueryFactory
                 .selectFrom(qPostEntity)
@@ -48,7 +51,7 @@ public class SearchService {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 전체 개수 조회
+        // 총 개수 조회
         long total = jpaQueryFactory
                 .selectFrom(qPostEntity)
                 .where(tagCondition)
@@ -60,5 +63,20 @@ public class SearchService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtos, pageable, total);
+    }
+
+    private void incrementTagSearchCount(String tagName) {
+        TagEntity tagEntity = tagRepo.findByName(tagName);
+
+        if (tagEntity != null) {
+            tagEntity.incrementSearchCount(); // 검색 횟수 증가
+            tagRepo.save(tagEntity); // 변경된 태그 저장
+        }
+    }
+
+    public List<String> getTop10Tags() {
+        return tagRepo.findTop10BySearchCount().stream()
+                .map(TagEntity::getName)
+                .collect(Collectors.toList());
     }
 }
