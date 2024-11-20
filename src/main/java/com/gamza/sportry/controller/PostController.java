@@ -37,9 +37,11 @@ public class PostController {
     }
 
     @Operation(summary = "게시글 목록 조회 (크루페이지)")
-    @GetMapping("/crew")
-    public ResponseEntity<List<CrewPostsResponseDto>> findCrewPosts() {
-        List<CrewPostsResponseDto> posts = postService.findCrewPosts();
+    @GetMapping({"/crew", "/crew/{lastPostId}"})
+    public ResponseEntity<List<CrewPostsResponseDto>> findCrewPosts(
+            @PathVariable(required = false) Long lastPostId) {
+
+        List<CrewPostsResponseDto> posts = postService.findCrewPosts(lastPostId);
         return ResponseEntity.ok(posts);
     }
 
