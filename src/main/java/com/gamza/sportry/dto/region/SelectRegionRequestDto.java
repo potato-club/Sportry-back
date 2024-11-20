@@ -6,5 +6,6 @@ import java.util.List;
 
 @Data
 public class SelectRegionRequestDto {
-    private List<Long> townIds;
+//    private List<Long> townIds;
+    private Long cityId;
 }

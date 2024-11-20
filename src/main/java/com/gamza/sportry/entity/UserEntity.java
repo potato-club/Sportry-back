@@ -45,6 +45,10 @@ public class UserEntity extends BaseEntity {
     )
     private List<TownEntity> towns = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
+
     @Column(nullable = false, unique = true)
     private String userId;
 
@@ -69,4 +73,14 @@ public class UserEntity extends BaseEntity {
         this.refreshToken = RT;
     }
 
+    public void changeCity(CityEntity newCity) {
+        if (this.city != null) {
+            this.city.getUsers().remove(this);
+        }
+
+        this.city = newCity;
+        if (newCity != null) {
+            newCity.getUsers().add(this);
+        }
+    }
 }

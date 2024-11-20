@@ -58,7 +58,7 @@ public class RegionService {
         return towns.stream().map(town -> new TownResponseDto(town.getId(), town.getName())).collect(Collectors.toList());
     }
 
-    // 사용자가 선택한 지역 저장
+    // 사용자가 선택한 지역 저장 - 2차개발 변경
     @Transactional
     public void saveUserRegion(SelectRegionRequestDto selectRegionDto, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveAccessToken(request);
@@ -71,30 +71,50 @@ public class RegionService {
 
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new BadRequestException("사용자를 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
+        Long selectedCityId = selectRegionDto.getCityId();
 
-        // 사용자가 선택한 여러 townId에 대해 처리
-        List<Long> selectedTownIds = selectRegionDto.getTownIds();
+        CityEntity newCity = cityRepository.findById(selectedCityId)
+                .orElseThrow(() -> new BadRequestException("해당 지역을 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
 
-        // 기존에 사용자가 선택한 모든 지역 정보 삭제
-        if (user.getTowns() != null) {
-            for (TownEntity currentTown : user.getTowns()) {
-                currentTown.getUsers().remove(user);
-            }
-            user.getTowns().clear();
-        }
+        user.changeCity(newCity);
 
-        // 새로 선택한 townId 리스트를 처리하여 사용자와 연관 관계 설정
-        for (Long townId : selectedTownIds) {
-            TownEntity town = townRepository.findById(townId)
-                    .orElseThrow(() -> new BadRequestException("해당 읍면동을 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
-
-            // 이미 추가된 관계를 중복으로 처리하지 않도록 체크
-            if (!town.getUsers().contains(user)) {
-                town.getUsers().add(user);
-            }
-
-            user.getTowns().add(town);
-        }
+//        // 사용자가 선택한 여러 townId에 대해 처리
+//        List<Long> selectedTownIds = selectRegionDto.getTownIds();
+//
+//        // 기존에 사용자가 선택한 모든 지역 정보 삭제
+//        if (user.getTowns() != null) {
+//            for (TownEntity currentTown : user.getTowns()) {
+//                currentTown.getUsers().remove(user);
+//            }
+//            user.getTowns().clear();
+//        }
+//
+//        // 새로 선택한 townId 리스트를 처리하여 사용자와 연관 관계 설정
+//        for (Long townId : selectedTownIds) {
+//            TownEntity town = townRepository.findById(townId)
+//                    .orElseThrow(() -> new BadRequestException("해당 읍면동을 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
+//
+//            // 이미 추가된 관계를 중복으로 처리하지 않도록 체크
+//            if (!town.getUsers().contains(user)) {
+//                town.getUsers().add(user);
+//            }
+//
+//            user.getTowns().add(town);
+//        }
     }
 
+    @Transactional(readOnly = true)
+    public String loadUserRegion(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            throw new InvalidTokenException("유효하지 않은 토큰입니다.", ErrorCode.BAD_REQUEST_EXCEPTION);
+        }
+
+        String userId = jwtTokenProvider.getUserId(token);
+
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new BadRequestException("사용자를 찾을 수 없습니다.", ErrorCode.BAD_REQUEST_EXCEPTION));
+        return user.getCity().getName();
+    }
 }

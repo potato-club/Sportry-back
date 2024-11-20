@@ -24,6 +24,9 @@ public class CityEntity {
     @Column(nullable = false)
     private String name; // 시군구 이름
 
+    @ManyToMany(mappedBy = "towns")
+    private List<UserEntity> users; // 일대다 관계로 변경
+
     @ManyToOne
     @JoinColumn(name = "region_id", nullable = false)
     private RegionEntity region; // 해당 시군구가 속한 시도
