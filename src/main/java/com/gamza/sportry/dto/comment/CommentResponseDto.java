@@ -1,11 +1,9 @@
 package com.gamza.sportry.dto.comment;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +15,7 @@ public class CommentResponseDto {
     private Long parent_id;
     private Long id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
-    private LocalDateTime createdDate;
-
+    private String commentDate;
     private String content;
     private int likeCount;
 

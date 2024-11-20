@@ -30,6 +30,7 @@ public class PostService {
     private final SportRepo sportRepo;
     private final UserService userService;
     private final TagService tagService;
+    private final TimeService timeService;
 
     public void createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
         UserEntity user = userService.findUserByToken(request);
@@ -83,7 +84,7 @@ public class PostService {
     private CrewPostsResponseDto mapToDto(PostEntity post) {
         return CrewPostsResponseDto.builder()
                 .id(post.getId())
-                .createdDate(post.getCreatedDate())
+                .postDate(timeService.timeSet(post.getCreatedDate()))
                 .title(post.getTitle())
                 .postState(post.getPostState().getTitle())
                 .sport(post.getSport().getName())
@@ -106,7 +107,7 @@ public class PostService {
         post.upViewCount();
 
         return PostResponseDto.builder()
-                .createdDate(post.getCreatedDate())
+                .postDate(timeService.timeSet(post.getCreatedDate()))
                 .title(post.getTitle())
                 .content(post.getContent())
                 .postState(post.getPostState().getTitle())

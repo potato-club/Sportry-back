@@ -1,12 +1,9 @@
 package com.gamza.sportry.dto.post;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.gamza.sportry.entity.custom.PostState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,9 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PostResponseDto {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
-    private LocalDateTime createdDate;
-
+    private String postDate;
     private String title;
     private String content;
     private String postState;
