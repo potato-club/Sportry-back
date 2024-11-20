@@ -7,7 +7,6 @@ import com.gamza.sportry.dto.user.RetrieveUserIdRequestDto;
 import com.gamza.sportry.entity.UserEntity;
 import com.gamza.sportry.repo.UserRepo;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

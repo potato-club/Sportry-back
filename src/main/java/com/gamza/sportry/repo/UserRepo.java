@@ -1,7 +1,6 @@
 package com.gamza.sportry.repo;
 
 import com.gamza.sportry.entity.UserEntity;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
