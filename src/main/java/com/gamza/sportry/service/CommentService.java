@@ -26,6 +26,7 @@ public class CommentService {
     private final CommentRepo commentRepo;
     private final PostRepo postRepo;
     private final UserService userService;
+    private final TimeService timeService;
 
     public void createComment(Long post_id, CommentRequestDto commentRequestDto, HttpServletRequest request) {
         UserEntity user = userService.findUserByToken(request);
@@ -85,7 +86,7 @@ public class CommentService {
                 .filter(comment -> comment.getParent() == null)
                 .map(comment -> CommentResponseDto.builder()
                         .id(comment.getId())
-                        .createdDate(comment.getCreatedDate())
+                        .commentDate(timeService.timeSet(comment.getCreatedDate()))
                         .content(comment.getContent())
                         .likeCount(comment.getLikeCount())
                         .children(findreplies(comment.getId()))
@@ -103,7 +104,7 @@ public class CommentService {
                 .map(reply -> CommentResponseDto.builder()
                         .parent_id(reply.getParent().getId())
                         .id(reply.getId())
-                        .createdDate(reply.getCreatedDate())
+                        .commentDate(timeService.timeSet(reply.getCreatedDate()))
                         .content(reply.getContent())
                         .likeCount(reply.getLikeCount())
                         .build())
