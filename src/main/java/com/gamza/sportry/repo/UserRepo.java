@@ -1,6 +1,7 @@
 package com.gamza.sportry.repo;
 
 import com.gamza.sportry.entity.UserEntity;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,7 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
 
     boolean existsByNickName(String nickName);
     boolean existsByUserId(String userId);
+
+    Optional<UserEntity> findByNickNameAndEmail(String nickName, String email);
 
 }
