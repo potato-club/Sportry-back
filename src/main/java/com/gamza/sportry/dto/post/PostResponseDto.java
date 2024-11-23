@@ -11,6 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PostResponseDto {
 
+    private String nickName;
+    private String region;
+
     private String postDate;
     private String title;
     private String content;

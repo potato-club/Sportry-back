@@ -43,6 +43,7 @@ public class PostService {
                 .content(postRequestDto.getContent())
                 .postState(postRequestDto.getPostState())
                 .sport(sportRepo.findByName(postRequestDto.getSport()))
+                .city(user.getCity())
                 .viewCount(0)
                 .likeCount(0)
                 .commentCount(0)
@@ -84,6 +85,7 @@ public class PostService {
     private CrewPostsResponseDto mapToDto(PostEntity post) {
         return CrewPostsResponseDto.builder()
                 .id(post.getId())
+                .region(post.getCity().getName())
                 .postDate(timeService.timeSet(post.getCreatedDate()))
                 .title(post.getTitle())
                 .postState(post.getPostState().getTitle())
@@ -107,6 +109,8 @@ public class PostService {
         post.upViewCount();
 
         return PostResponseDto.builder()
+                .nickName(post.getUser().getNickName())
+                .region(post.getCity().getName())
                 .postDate(timeService.timeSet(post.getCreatedDate()))
                 .title(post.getTitle())
                 .content(post.getContent())

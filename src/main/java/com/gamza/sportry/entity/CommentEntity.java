@@ -30,6 +30,10 @@ public class CommentEntity extends BaseEntity  {
     @JoinColumn(name = "parent_id")
     private CommentEntity parent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
+
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<CommentEntity> children = new ArrayList<>();
 

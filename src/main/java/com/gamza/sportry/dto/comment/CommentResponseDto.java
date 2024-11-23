@@ -15,6 +15,9 @@ public class CommentResponseDto {
     private Long parent_id;
     private Long id;
 
+    private String nickName;
+    private String region;
+
     private String commentDate;
     private String content;
     private int likeCount;
