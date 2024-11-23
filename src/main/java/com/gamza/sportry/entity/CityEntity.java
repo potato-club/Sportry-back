@@ -34,4 +34,10 @@ public class CityEntity {
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
     private List<TownEntity> towns; // 읍면동 리스트
 
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    private List<PostEntity> posts;
+
+    @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
+    private List<CommentEntity> comments;
+
 }

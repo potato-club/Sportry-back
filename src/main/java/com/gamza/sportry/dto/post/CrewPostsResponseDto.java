@@ -13,6 +13,8 @@ public class CrewPostsResponseDto {
 
     private Long id;
 
+    private String region;
+
     private String postDate;
     private String title;
     private String postState;
