@@ -8,13 +8,15 @@ import com.gamza.sportry.dto.post.PostRequestDto;
 import com.gamza.sportry.dto.main.response.MainPostsResponseDto;
 import com.gamza.sportry.dto.post.PostResponseDto;
 import com.gamza.sportry.entity.PostEntity;
+import com.gamza.sportry.entity.QPostEntity;
 import com.gamza.sportry.entity.SportEntity;
 import com.gamza.sportry.entity.UserEntity;
 import com.gamza.sportry.repo.PostRepo;
 import com.gamza.sportry.repo.sport.SportRepo;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ public class PostService {
     private final UserService userService;
     private final TagService tagService;
     private final TimeService timeService;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public void createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
         UserEntity user = userService.findUserByToken(request);
@@ -43,6 +46,7 @@ public class PostService {
                 .content(postRequestDto.getContent())
                 .postState(postRequestDto.getPostState())
                 .sport(sportRepo.findByName(postRequestDto.getSport()))
+                .city(user.getCity())
                 .viewCount(0)
                 .likeCount(0)
                 .commentCount(0)
@@ -66,15 +70,26 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<CrewPostsResponseDto> findCrewPosts(Long lastPostId) {
-        PageRequest pageRequest = PageRequest.of(0, 6);
-        List<PostEntity> posts;
+    public List<CrewPostsResponseDto> findCrewPosts(Long lastPostId, HttpServletRequest request) {
+        UserEntity user = userService.findUserByToken(request);
+        if (user == null)
+            throw new UnAuthorizedException("게시글 조회 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
 
-        if (lastPostId == null) {
-            posts = postRepo.findAllByOrderByIdDesc(pageRequest);
-        } else {
-            posts = postRepo.findByIdLessThanOrderByIdDesc(lastPostId, pageRequest);
+        String cityName  = user.getCity().getName();
+        int pageSize = 6;
+
+        QPostEntity post = QPostEntity.postEntity;
+        JPAQuery<PostEntity> query = jpaQueryFactory
+                .selectFrom(post)
+                .where(post.city.name.eq(cityName))
+                .orderBy(post.id.desc())
+                .limit(pageSize);
+
+        if (lastPostId != null) {
+            query.where(post.id.lt(lastPostId));
         }
+
+        List<PostEntity> posts = query.fetch();
 
         return posts.stream()
                 .map(this::mapToDto)
@@ -84,6 +99,7 @@ public class PostService {
     private CrewPostsResponseDto mapToDto(PostEntity post) {
         return CrewPostsResponseDto.builder()
                 .id(post.getId())
+                .region(post.getCity().getName())
                 .postDate(timeService.timeSet(post.getCreatedDate()))
                 .title(post.getTitle())
                 .postState(post.getPostState().getTitle())
@@ -107,6 +123,8 @@ public class PostService {
         post.upViewCount();
 
         return PostResponseDto.builder()
+                .nickName(post.getUser().getNickName())
+                .region(post.getCity().getName())
                 .postDate(timeService.timeSet(post.getCreatedDate()))
                 .title(post.getTitle())
                 .content(post.getContent())

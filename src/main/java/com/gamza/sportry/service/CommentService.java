@@ -1,15 +1,14 @@
 package com.gamza.sportry.service;
 
-import com.gamza.sportry.core.error.ErrorCode;
-import com.gamza.sportry.core.error.exception.NotFoundException;
-import com.gamza.sportry.core.error.exception.UnAuthorizedException;
 import com.gamza.sportry.dto.comment.CommentRequestDto;
 import com.gamza.sportry.dto.comment.CommentResponseDto;
 import com.gamza.sportry.entity.CommentEntity;
 import com.gamza.sportry.entity.PostEntity;
 import com.gamza.sportry.entity.UserEntity;
 import com.gamza.sportry.repo.CommentRepo;
-import com.gamza.sportry.repo.PostRepo;
+import com.gamza.sportry.validation.CommentValidation;
+import com.gamza.sportry.validation.PostValidation;
+import com.gamza.sportry.validation.UserValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,22 +23,20 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepo commentRepo;
-    private final PostRepo postRepo;
-    private final UserService userService;
     private final TimeService timeService;
 
-    public void createComment(Long post_id, CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        UserEntity user = userService.findUserByToken(request);
-        if (user == null)
-            throw new NotFoundException("로그인 후 댓글 작성이 가능합니다", ErrorCode.NOT_FOUND_EXCEPTION);
+    private final UserValidation userValidation;
+    private final PostValidation postValidation;
+    private final CommentValidation commentValidation;
 
-        PostEntity post = postRepo.findById(post_id).orElse(null);
-        if (post == null)
-            throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+    public void createComment(Long post_id, CommentRequestDto commentRequestDto, HttpServletRequest request) {
+        UserEntity user = userValidation.isPresentUser(request);
+        PostEntity post = postValidation.isPresentPost(post_id);
 
         CommentEntity comment = CommentEntity.builder()
                 .user(user)
                 .post(post)
+                .city(user.getCity())
                 .content(commentRequestDto.getContent())
                 .likeCount(0)
                 .build();
@@ -50,23 +47,15 @@ public class CommentService {
 
     public void createReply(Long post_id, Long comment_id,
                             CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        UserEntity user = userService.findUserByToken(request);
-        if (user == null)
-            throw new NotFoundException("로그인 후 댓글 작성이 가능합니다", ErrorCode.NOT_FOUND_EXCEPTION);
-
-        PostEntity post = postRepo.findById(post_id).orElse(null);
-        if (post == null)
-            throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
-
-        CommentEntity parent = commentRepo.findById(comment_id).orElse(null);
-        if (parent == null)
-            throw new NotFoundException("찾을 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
-        if (parent.getParent() != null)
-            throw new NotFoundException("작성할 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+        UserEntity user = userValidation.isPresentUser(request);
+        PostEntity post = postValidation.isPresentPost(post_id);
+        CommentEntity parent = commentValidation.isPresentComment(comment_id);
+        commentValidation.isParent(parent);
 
         CommentEntity comment = CommentEntity.builder()
                 .user(user)
                 .post(post)
+                .city(user.getCity())
                 .parent(parent)
                 .content(commentRequestDto.getContent())
                 .likeCount(0)
@@ -77,15 +66,15 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> findComments(Long post_id) {
-        PostEntity post = postRepo.findById(post_id).orElse(null);
-        if (post == null)
-            throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+        PostEntity post = postValidation.isPresentPost(post_id);
 
         List<CommentEntity> comments = post.getComments();
         return comments.stream()
                 .filter(comment -> comment.getParent() == null)
                 .map(comment -> CommentResponseDto.builder()
                         .id(comment.getId())
+                        .nickName(comment.getUser().getNickName())
+                        .region(comment.getCity().getName())
                         .commentDate(timeService.timeSet(comment.getCreatedDate()))
                         .content(comment.getContent())
                         .likeCount(comment.getLikeCount())
@@ -95,15 +84,15 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> findreplies(Long comment_id) {
-        CommentEntity parent = commentRepo.findById(comment_id).orElse(null);
-        if (parent == null)
-            throw new NotFoundException("찾을 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
+        CommentEntity parent = commentValidation.isPresentComment(comment_id);
 
         List<CommentEntity> replies = parent.getChildren();
         return replies.stream()
                 .map(reply -> CommentResponseDto.builder()
                         .parent_id(reply.getParent().getId())
                         .id(reply.getId())
+                        .nickName(reply.getUser().getNickName())
+                        .region(reply.getCity().getName())
                         .commentDate(timeService.timeSet(reply.getCreatedDate()))
                         .content(reply.getContent())
                         .likeCount(reply.getLikeCount())
@@ -112,29 +101,17 @@ public class CommentService {
     }
 
     public void updateComment(Long comment_id, CommentRequestDto commentRequestDto, HttpServletRequest request) {
-        UserEntity user = userService.findUserByToken(request);
-        if (user == null)
-            throw new UnAuthorizedException("댓글 수정 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
-
-        CommentEntity comment = commentRepo.findById(comment_id).orElse(null);
-        if (comment == null)
-            throw new NotFoundException("수정할 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
-        if (comment.getUser() != user)
-            throw new UnAuthorizedException("댓글 수정 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        UserEntity user = userValidation.isPresentUser(request);
+        CommentEntity comment = commentValidation.isPresentComment(comment_id);
+        commentValidation.isValidateComment(user, comment);
 
         comment.update(commentRequestDto);
     }
 
     public void deleteComment(Long comment_id, HttpServletRequest request) {
-        UserEntity user = userService.findUserByToken(request);
-        if (user == null)
-            throw new UnAuthorizedException("댓글 삭제 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
-
-        CommentEntity comment = commentRepo.findById(comment_id).orElse(null);
-        if (comment == null)
-            throw new NotFoundException("삭제할 수 없는 댓글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
-        if (comment.getUser() != user)
-            throw new UnAuthorizedException("댓글 삭제 권한이 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        UserEntity user = userValidation.isPresentUser(request);
+        CommentEntity comment = commentValidation.isPresentComment(comment_id);
+        commentValidation.isValidateComment(user, comment);
 
         PostEntity post = comment.getPost();
         post.downCommentCount();
