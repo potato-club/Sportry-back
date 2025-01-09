@@ -4,6 +4,7 @@ import com.gamza.sportry.entity.custom.PostState;
 import lombok.Data;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class PostRequestDto {
@@ -12,4 +13,5 @@ public class PostRequestDto {
     private PostState postState;
     private String sport;
     private List<String> tag;
+    private List<MultipartFile> images;
 }

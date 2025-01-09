@@ -7,14 +7,18 @@ import com.gamza.sportry.dto.post.CrewPostsResponseDto;
 import com.gamza.sportry.dto.post.PostRequestDto;
 import com.gamza.sportry.dto.main.response.MainPostsResponseDto;
 import com.gamza.sportry.dto.post.PostResponseDto;
+import com.gamza.sportry.entity.FileEntity;
 import com.gamza.sportry.entity.PostEntity;
 import com.gamza.sportry.entity.QPostEntity;
 import com.gamza.sportry.entity.SportEntity;
 import com.gamza.sportry.entity.UserEntity;
+import com.gamza.sportry.entity.custom.FileType;
 import com.gamza.sportry.repo.PostRepo;
+import com.gamza.sportry.repo.file.FileRepo;
 import com.gamza.sportry.repo.sport.SportRepo;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.gamza.sportry.service.S3.S3UploadService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -34,6 +39,8 @@ public class PostService {
     private final TagService tagService;
     private final TimeService timeService;
     private final JPAQueryFactory jpaQueryFactory;
+    private final S3UploadService s3UploadService;
+    private final FileRepo fileRepo;
 
     public void createPost(PostRequestDto postRequestDto, HttpServletRequest request) {
         UserEntity user = userService.findUserByToken(request);
@@ -52,10 +59,25 @@ public class PostService {
                 .commentCount(0)
                 .build();
 
-        postRepo.save(post);
+        PostEntity savedPost = postRepo.save(post);
+
+        // 이미지 업로드 및 FileEntity 생성
+        List<MultipartFile> images = postRequestDto.getImages();
+        if (images != null && !images.isEmpty()) {
+            images.forEach(image -> {
+                String fileUrl = s3UploadService.uploadFile(image);
+                FileEntity fileEntity = FileEntity.builder()
+                        .fileName(image.getOriginalFilename())
+                        .fileUrl(fileUrl)
+                        .fileType(FileType.POST_IMAGE)
+                        .post(savedPost)
+                        .build();
+                fileRepo.save(fileEntity);
+            });
+        }
 
         List<String> tags = postRequestDto.getTag();
-        tags.forEach(tag -> tagService.addTag(post, tag));
+        tags.forEach(tag -> tagService.addTag(savedPost, tag));
     }
 
     public List<MainPostsResponseDto> findMainPosts() {
@@ -168,5 +190,4 @@ public class PostService {
 
         postRepo.delete(post);
     }
-
 }
