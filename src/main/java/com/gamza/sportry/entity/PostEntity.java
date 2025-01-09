@@ -39,6 +39,9 @@ public class PostEntity extends BaseEntity {
     @JoinColumn(name = "city_id")
     private CityEntity city;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FileEntity> images;
+
     @Column(nullable = false)
     private String title;
 
