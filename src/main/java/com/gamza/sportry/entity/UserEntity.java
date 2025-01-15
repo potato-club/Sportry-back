@@ -49,6 +49,9 @@ public class UserEntity extends BaseEntity {
     @JoinColumn(name = "city_id")
     private CityEntity city;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private FileEntity profileImg;
+
     @Column(nullable = false, unique = true)
     private String userId;
 
@@ -68,6 +71,7 @@ public class UserEntity extends BaseEntity {
 
     private String gender;
     private LocalDate birth;
+
 
     public void updateRefreshToken(String RT) {
         this.refreshToken = RT;

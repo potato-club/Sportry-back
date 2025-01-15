@@ -24,7 +24,7 @@ public class PostController {
 
     @Operation(summary = "게시글 작성")
     @PostMapping()
-    public ResponseEntity<String> createPost(@RequestBody PostRequestDto postRequestDto,  HttpServletRequest request) {
+    public ResponseEntity<String> createPost(@ModelAttribute PostRequestDto postRequestDto,  HttpServletRequest request) {
         postService.createPost(postRequestDto, request);
         return ResponseEntity.ok("게시글 작성 완료");
     }

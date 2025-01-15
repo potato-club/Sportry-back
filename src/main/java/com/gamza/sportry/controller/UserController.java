@@ -6,7 +6,6 @@ import com.gamza.sportry.dto.user.RetrieveUserIdRequestDto;
 import com.gamza.sportry.service.UserService;
 import com.gamza.sportry.service.login.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
