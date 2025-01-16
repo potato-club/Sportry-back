@@ -28,8 +28,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .httpBasic().disable()
-                .cors(AbstractHttpConfigurer::disable) // 필요한 경우 CORS 설정 추가
-                .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                         .contentTypeOptions(contentTypeOptions -> contentTypeOptions.disable()) // 필요 시 사용
