@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error/**", "/auth/**", "/main/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/error/**", "/auth/**", "/main/**", "/swagger-ui/**", "/v3/api-docs/**", "/region/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority(UserRole.Admin.name())
                         .anyRequest().authenticated()
                 )
