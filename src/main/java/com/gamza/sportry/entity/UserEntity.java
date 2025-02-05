@@ -1,6 +1,7 @@
 package com.gamza.sportry.entity;
 
 import com.gamza.sportry.core.entity.BaseEntity;
+import com.gamza.sportry.entity.custom.Gender;
 import com.gamza.sportry.entity.custom.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -69,7 +70,9 @@ public class UserEntity extends BaseEntity {
 
     private UserRole userRole;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     private LocalDate birth;
 
 
