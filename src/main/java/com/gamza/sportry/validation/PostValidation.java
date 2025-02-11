@@ -2,7 +2,9 @@ package com.gamza.sportry.validation;
 
 import com.gamza.sportry.core.error.ErrorCode;
 import com.gamza.sportry.core.error.exception.NotFoundException;
+import com.gamza.sportry.core.error.exception.UnAuthorizedException;
 import com.gamza.sportry.entity.PostEntity;
+import com.gamza.sportry.entity.UserEntity;
 import com.gamza.sportry.repo.PostRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,11 @@ public class PostValidation {
         if (post == null)
             throw new NotFoundException("찾을 수 없는 게시글입니다", ErrorCode.NOT_FOUND_EXCEPTION);
         return post;
+    }
+
+    public void isValidatePost(UserEntity user, PostEntity post) {
+        if (post.getUser() != user)
+            throw new UnAuthorizedException("댓글을 변경할 수 없습니다", ErrorCode.UNAUTHORIZED_EXCEPTION);
     }
 
 }
