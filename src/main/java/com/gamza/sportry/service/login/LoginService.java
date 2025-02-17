@@ -61,6 +61,7 @@ public class LoginService {
                 .email(registerRequest.getEmail())
                 .userId(registerRequest.getUserId())
                 .userRole(UserRole.Normal)
+                .gender(registerRequest.getGender())
                 .password(registerRequest.getUserPw() != null ? passwordEncoder.encode(registerRequest.getUserPw()) : null)
                 .nickName(registerRequest.getNickName())
                 .refreshToken(RT)
