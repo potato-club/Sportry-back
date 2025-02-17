@@ -1,0 +1,58 @@
+server:
+  port: 8082
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 5
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(CPjQ2bc4S9/UF8fIzIPuz3OS8nEhN3N8zPlW41n3x+luDA6eDPIzigTSpk5K/5uRQHlKwkVxHFwkONexkS20NuRuw1YPYt4DVs7RbINPUG6OKGTHuZjKHo/GwxywuwJ94RWawk/5wtvyfhsCUsxBz3DEnYZaJD1EFrtSTYC2nMY=)
+    username: ENC(2wJ/ziTK7hTXLVQkRUOyfH8l6foq5bv2gbmWOjujKDevIRX31ipqQ6ohDRUR3aDz)
+    password: ENC(k0GuX6G0TMPq9ALWxBXttpwdkyTA30ii3TQYutB5Zx6G2J0oQWc0XkMaxj2lzeyz)
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        show_sql: false
+        format_sql: true
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+jwt:
+  secretKey: ENC(AaB0O7vvslLcqyWfZ7P0X7cRdvsSmh4sUg1e6PfSy41r9vvxh6vpeMzY2zYAaXrxG2p7s/XCxkXF5nUxfwgObq03g4RB3fY3f9QAJPWkTmY=)
+  accessTokenExpiration: 3000000000
+  refreshTokenExpiration: 6000000000
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
+
+cloud:
+  aws:
+    s3:
+      bucket: ENC(jTRBZV/HO6c4Q1W5dZBAxq3NNFlc2DTnMFbWS65FL8qkyEotbFoM0gI/P41j8g+q)
+    region:
+      static: ENC(N+a5h7Y5KnDPyJxMoXA1WDyuzaPXjPv7EvTQwGd3yk2mx0pWMpSDSrLw2zJTPx1D)
+      auto: false
+    credentials:
+      accessKey: ENC(R3q+BYauzmv1OaNaHsEUd9V5BnTtHsP+vn/nV/lP2wpz2FLo6F41/o/3APjlkTajYB6YCcaRZwh0AS0I4F7bFQ==)
+      secretKey: ENC(wJdZmcRJSK/qMMowpc/jg4vBVXLil2GxjHTdd4SELfUAW21fkSm2TdgVIIsw2jwqX/KnLPe+CXoyri6BiAUBaZ733Eabng3zKgKWEGEh9tU=)
+    stack:
+      auto: false
+    ses:
+      access-key: ENC(rVtD5vALGrZb4b5A/ec0RFr6EMIxQUkckI4fmdiif9MxQOqsfwrsWiLVEFSwy1kQsaOcYocF+8yXR0stEyyCqg==)
+      secret-key: ENC(WYRFugxeSAC645hlbkDIigE047vhP9D72UtPlGj33UT/vzaAgz8fbqW8Z4xIEVmuA6ZJxvyXGGtJdSDdWJyFUBTnTtvEZKvazYX83DsnYHU=)
+      send-mail-to: ENC(TsT2GGy4kQYG27tjP6vuhajvnGK6NOQIdMglRVF/GAOgQ3x3uduFayaVW7XXRfhf9cLJ1RYWWufi5KvnzREjhw==)
+      region: ENC(N+a5h7Y5KnDPyJxMoXA1WDyuzaPXjPv7EvTQwGd3yk2mx0pWMpSDSrLw2zJTPx1D)

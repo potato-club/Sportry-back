@@ -1,0 +1,62 @@
+package com.gamza.sportry.entity;
+
+import com.gamza.sportry.core.entity.BaseEntity;
+import com.gamza.sportry.dto.comment.CommentRequestDto;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommentEntity extends BaseEntity  {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private PostEntity post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private CommentEntity parent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<CommentEntity> children = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLikeEntity> commentLikes;
+
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false)
+    private int likeCount;
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.content = commentRequestDto.getContent();
+    }
+
+    public void upCommentLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void downCommentLikeCount() {
+        this.likeCount -= 1;
+    }
+
+
+}
