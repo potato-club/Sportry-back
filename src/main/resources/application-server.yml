@@ -51,3 +51,8 @@ cloud:
       secretKey: ENC(wJdZmcRJSK/qMMowpc/jg4vBVXLil2GxjHTdd4SELfUAW21fkSm2TdgVIIsw2jwqX/KnLPe+CXoyri6BiAUBaZ733Eabng3zKgKWEGEh9tU=)
     stack:
       auto: false
+    ses:
+      access-key: ENC(rVtD5vALGrZb4b5A/ec0RFr6EMIxQUkckI4fmdiif9MxQOqsfwrsWiLVEFSwy1kQsaOcYocF+8yXR0stEyyCqg==)
+      secret-key: ENC(WYRFugxeSAC645hlbkDIigE047vhP9D72UtPlGj33UT/vzaAgz8fbqW8Z4xIEVmuA6ZJxvyXGGtJdSDdWJyFUBTnTtvEZKvazYX83DsnYHU=)
+      send-mail-to: ENC(TsT2GGy4kQYG27tjP6vuhajvnGK6NOQIdMglRVF/GAOgQ3x3uduFayaVW7XXRfhf9cLJ1RYWWufi5KvnzREjhw==)
+      region: ENC(N+a5h7Y5KnDPyJxMoXA1WDyuzaPXjPv7EvTQwGd3yk2mx0pWMpSDSrLw2zJTPx1D)

@@ -62,6 +62,11 @@ dependencies {
 
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	//AWS SES
+	implementation 'software.amazon.awssdk:ses:2.20.150'
+	implementation 'software.amazon.awssdk:core:2.20.150'
+
 }
 
 clean {	delete file('src/main/generated')}
