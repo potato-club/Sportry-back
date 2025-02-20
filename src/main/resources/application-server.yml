@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ENC(CPjQ2bc4S9/UF8fIzIPuz3OS8nEhN3N8zPlW41n3x+luDA6eDPIzigTSpk5K/5uRQHlKwkVxHFwkONexkS20NuRuw1YPYt4DVs7RbINPUG6OKGTHuZjKHo/GwxywuwJ94RWawk/5wtvyfhsCUsxBz3DEnYZaJD1EFrtSTYC2nMY=)
     username: ENC(2wJ/ziTK7hTXLVQkRUOyfH8l6foq5bv2gbmWOjujKDevIRX31ipqQ6ohDRUR3aDz)
-    password: ENC(k0GuX6G0TMPq9ALWxBXttpwdkyTA30ii3TQYutB5Zx6G2J0oQWc0XkMaxj2lzeyz)
+    password: ENC(kA5RLM5xycUE1EePqZS26FRl+Omwbk+NFhsiZ4kBz8AMUKRMFs8TEELe1+bKOm9n)
 
   jpa:
     hibernate:
