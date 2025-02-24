@@ -16,7 +16,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         enable_lazy_load_no_trans: true
@@ -31,7 +31,7 @@ spring:
 
 jwt:
   secretKey: ENC(AaB0O7vvslLcqyWfZ7P0X7cRdvsSmh4sUg1e6PfSy41r9vvxh6vpeMzY2zYAaXrxG2p7s/XCxkXF5nUxfwgObq03g4RB3fY3f9QAJPWkTmY=)
-  accessTokenExpiration: 3000000000
+  accessTokenExpiration: 3000000
   refreshTokenExpiration: 6000000000
 
 jasypt:
