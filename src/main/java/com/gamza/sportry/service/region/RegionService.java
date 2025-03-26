@@ -39,7 +39,11 @@ public class RegionService {
     // 시도 목록 가져오기
     public List<RegionResponseDto> getAllRegion() {
         List<RegionEntity> regions = regionRepository.findAll();
-        return regions.stream().map(region -> new RegionResponseDto(region.getId(), region.getName())).collect(Collectors.toList());
+        return regions.stream().map(region ->
+                new RegionResponseDto(
+                        region.getId(),
+                        region.getName()
+                )).collect(Collectors.toList());
     }
 
     // 시군구 목록 가져오기
