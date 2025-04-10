@@ -2,6 +2,7 @@ package com.gamza.sportry.service;
 
 import com.gamza.sportry.core.error.ErrorCode;
 import com.gamza.sportry.core.error.exception.NotFoundException;
+import com.gamza.sportry.core.error.exception.UnAuthorizedException;
 import com.gamza.sportry.core.security.JwtTokenProvider;
 import com.gamza.sportry.dto.user.ResetPasswordRequestDto;
 import com.gamza.sportry.dto.user.RetrievePasswordRequestDto;
@@ -60,5 +61,21 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
         user.updatePassword(encodedPassword);
     }
+
+    @Transactional
+    public void withdrawUser(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveAccessToken(request);
+        if (token == null) {
+            throw new UnAuthorizedException("AccessToken이 필요합니다.", ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+
+        String userId = jwtTokenProvider.getUserId(token);
+
+        UserEntity user = userRepo.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다.", ErrorCode.NOT_FOUND_EXCEPTION));
+
+        userRepo.delete(user);
+    }
+
 
 }
