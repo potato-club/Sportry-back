@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 
-    @Operation(summary = "회원가입 - 이메일 인증 코드 발송")
+    @Operation(summary = "이메일 인증 코드 발송")
     @PostMapping("/register/send-email")
     public ResponseEntity<String> sendVerificationEmail(@RequestBody EmailVerificationRequestDto requestDto) {
         emailVerificationService.sendVerificationEmail(requestDto.getEmail());
